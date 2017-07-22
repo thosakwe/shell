@@ -1,0 +1,5 @@
+name: shell
+dependencies:
+  indenting_buffer: ^1.0.0
+  platform: ^2.0.0
+  process: ^2.0.0
