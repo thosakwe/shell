@@ -1,5 +1,9 @@
 name: shell
+description: Wrapper over `dart:io` [Process] API's that supports additional features.
+environment:
+  sdk: ">=2.0.0-dev <3.0.0"
 dependencies:
-  indenting_buffer: ^1.0.0
+  file: ^5.0.0
+  path: ^1.0.0
   platform: ^2.0.0
-  process: ^2.0.0
+  process: ^3.0.0

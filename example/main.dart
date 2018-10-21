@@ -1,10 +1,3 @@
-# shell
-Wrapper over `dart:io` [Process] API's that supports features like environment management, user switches, and more.
-
-Useful for writing shell utility scripts in Dart, or within applications that perform system administration
-tasks on behalf of other users.
-
-```dart
 import 'dart:io';
 import 'package:file/local.dart';
 import 'package:shell/shell.dart';
@@ -51,4 +44,3 @@ main() async {
   await superEcho.expectExitCode([0, 1]);
   await superEcho.stdout.writeToFile(fs.file('hello_sudo.txt'));
 }
-```
