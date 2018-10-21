@@ -1,4 +1,5 @@
 # shell
+[![Pub](https://img.shields.io/pub/v/shell.svg)](https://pub.dartlang.org/packages/shell)
 Wrapper over `dart:io` [Process] API's that supports features like environment management, user switches, and more.
 
 Useful for writing shell utility scripts in Dart, or within applications that perform system administration

@@ -1,4 +1,7 @@
 name: shell
+version: 1.0.0
+homepage: https://github.com/thosakwe/shell.git
+author: Tobe Osakwe <thosakwe@gmail.com>
 description: Wrapper over `dart:io` [Process] API's that supports additional features.
 environment:
   sdk: ">=2.0.0-dev <3.0.0"
