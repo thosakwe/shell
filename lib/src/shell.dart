@@ -12,12 +12,14 @@ class Shell {
   bool includeParentEnvironment, sudo;
   String workingDirectory;
   String username, password;
+  bool runInShell;
 
   Shell(
       {this.processManager: const LocalProcessManager(),
       this.includeParentEnvironment: true,
       this.workingDirectory,
       this.sudo: false,
+      this.runInShell: true,
       this.username,
       this.password,
       Map<String, String> environment: const {}}) {
@@ -32,6 +34,7 @@ class Shell {
         includeParentEnvironment: other.includeParentEnvironment,
         workingDirectory: other.workingDirectory,
         sudo: other.sudo,
+        runInShell: other.runInShell,
         username: other.username,
         password: other.password);
   }
@@ -54,7 +57,7 @@ class Shell {
     return processManager.run(command,
         workingDirectory: workingDirectory,
         environment: environment,
-        runInShell: true,
+        runInShell: runInShell,
         includeParentEnvironment: includeParentEnvironment);
   }
 
@@ -73,7 +76,7 @@ class Shell {
     var p = await processManager.start(command,
         workingDirectory: workingDirectory,
         environment: environment,
-        runInShell: true,
+        runInShell: runInShell,
         includeParentEnvironment: includeParentEnvironment);
     if ((sudo || username != null) && password != null)
       p.stdin.writeln(password);
