@@ -10,8 +10,8 @@ class Shell {
   final ProcessManager processManager;
   final Map<String, String> environment = {};
   bool includeParentEnvironment, sudo;
-  String workingDirectory;
-  String username, password;
+  String? workingDirectory;
+  String? username, password;
   bool runInShell;
 
   Shell(
@@ -23,7 +23,7 @@ class Shell {
       this.username,
       this.password,
       Map<String, String> environment: const {}}) {
-    this.environment.addAll(environment ?? {});
+    this.environment.addAll(environment);
     workingDirectory ??= p.absolute(p.current);
   }
 
@@ -43,13 +43,13 @@ class Shell {
     if (workingDirectory == null) {
       workingDirectory = path;
     } else {
-      workingDirectory = p.join(workingDirectory, path);
+      workingDirectory = p.join(workingDirectory!, path);
     }
 
-    workingDirectory = p.absolute(workingDirectory);
+    workingDirectory = p.absolute(workingDirectory!);
   }
 
-  Future<ProcessResult> run(String executable, Iterable<String> arguments) {
+  Future<ProcessResult> run(String executable, Iterable<String>? arguments) {
     var command = [executable]..addAll(arguments ?? []);
     if (sudo)
       throw new UnsupportedError(
@@ -62,13 +62,13 @@ class Shell {
   }
 
   Future<WrappedProcess> start(
-      String executable, Iterable<String> arguments) async {
-    var command = [executable]..addAll(arguments ?? []);
+      String executable, Iterable<String>? arguments) async {
+    var command = [executable]..addAll((arguments ?? []) );
 
     if (sudo || username != null) {
       // sudo -k -p ''
       var sudoArgs = ['sudo', '-k', '-p', ''];
-      if (username != null) sudoArgs.addAll(['-u', username]);
+      if (username != null) sudoArgs.addAll(['-u', username!]);
       if (password != null) sudoArgs.add('-S');
       command.insertAll(0, sudoArgs);
     }
