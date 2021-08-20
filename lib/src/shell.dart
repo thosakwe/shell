@@ -49,8 +49,9 @@ class Shell {
     workingDirectory = p.absolute(workingDirectory!);
   }
 
-  Future<ProcessResult> run(String executable, Iterable<String>? arguments) {
-    var command = [executable]..addAll(arguments ?? []);
+  Future<ProcessResult> run(String executable,
+      {Iterable<String> arguments = const []}) {
+    var command = [executable]..addAll(arguments);
     if (sudo)
       throw new UnsupportedError(
           'When using `sudo`, you cannot call `run`, as stdin access is required to provide an account password.');
@@ -61,9 +62,9 @@ class Shell {
         includeParentEnvironment: includeParentEnvironment);
   }
 
-  Future<WrappedProcess> start(
-      String executable, Iterable<String>? arguments) async {
-    var command = [executable]..addAll((arguments ?? []) );
+  Future<WrappedProcess> start(String executable,
+      {Iterable<String> arguments = const []}) async {
+    var command = [executable]..addAll((arguments));
 
     if (sudo || username != null) {
       // sudo -k -p ''
@@ -83,10 +84,11 @@ class Shell {
     return new WrappedProcess(command.first, command.skip(1), p);
   }
 
-  Future<String> startAndReadAsString(
-      String executable, Iterable<String> arguments,
-      {Encoding encoding: utf8, List<int> acceptedExitCodes: const [0]}) async {
-    var p = await start(executable, arguments);
+  Future<String> startAndReadAsString(String executable,
+      {Iterable<String> arguments = const [],
+      Encoding encoding: utf8,
+      List<int> acceptedExitCodes: const [0]}) async {
+    var p = await start(executable, arguments: arguments);
     await p.expectExitCode(acceptedExitCodes);
     return await p.stdout.readAsString(encoding: encoding);
   }

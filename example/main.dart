@@ -9,7 +9,7 @@ main() async {
   print('Password: $password');
 
   // Pipe results to files, easily.
-  var echo = await shell.start('echo', ['hello world']);
+  var echo = await shell.start('echo', arguments: ['hello world']);
   await echo.stdout.writeToFile(fs.file('hello.txt'));
   await echo.stderr.drain();
 
@@ -19,19 +19,19 @@ main() async {
   // you don't have to manually.
   //
   // Otherwise, a StateError is thrown.
-  var find = await shell.start('find', ['.']);
+  var find = await shell.start('find', arguments: ['.']);
   await find.expectExitCode([0]); // Can also call find.expectZeroExit()
 
   // Dump outputs.
   print(await find.stdout.readAsString());
 
   // You can also run a process and immediately receive a string.
-  var pwd = await shell.startAndReadAsString('pwd', []);
+  var pwd = await shell.startAndReadAsString('pwd', arguments: []);
   print('cwd: $pwd');
 
   // Navigation allows you to `cd`.
   shell.navigate('./lib/src');
-  pwd = await shell.startAndReadAsString('pwd', []);
+  pwd = await shell.startAndReadAsString('pwd', arguments: []);
   print('cwd: $pwd');
 
   // We can make a separate shell, with the same settings.
@@ -40,7 +40,7 @@ main() async {
     ..password = password;
 
   // Say hi, as an admin!
-  var superEcho = await forked.start('echo', ['hello, admin!']);
+  var superEcho = await forked.start('echo', arguments: ['hello, admin!']);
   await superEcho.expectExitCode([0, 1]);
   await superEcho.stdout.writeToFile(fs.file('hello_sudo.txt'));
 }
