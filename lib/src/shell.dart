@@ -10,8 +10,8 @@ class Shell {
   final ProcessManager processManager;
   final Map<String, String> environment = {};
   bool includeParentEnvironment, sudo;
-  String workingDirectory;
-  String username, password;
+  String? workingDirectory;
+  String? username, password;
   bool runInShell;
 
   Shell(
@@ -23,7 +23,7 @@ class Shell {
       this.username,
       this.password,
       Map<String, String> environment: const {}}) {
-    this.environment.addAll(environment ?? {});
+    this.environment.addAll(environment);
     workingDirectory ??= p.absolute(p.current);
   }
 
@@ -43,14 +43,15 @@ class Shell {
     if (workingDirectory == null) {
       workingDirectory = path;
     } else {
-      workingDirectory = p.join(workingDirectory, path);
+      workingDirectory = p.join(workingDirectory!, path);
     }
 
-    workingDirectory = p.absolute(workingDirectory);
+    workingDirectory = p.absolute(workingDirectory!);
   }
 
-  Future<ProcessResult> run(String executable, Iterable<String> arguments) {
-    var command = [executable]..addAll(arguments ?? []);
+  Future<ProcessResult> run(String executable,
+      {Iterable<String> arguments = const []}) {
+    var command = [executable]..addAll(arguments);
     if (sudo)
       throw new UnsupportedError(
           'When using `sudo`, you cannot call `run`, as stdin access is required to provide an account password.');
@@ -61,14 +62,14 @@ class Shell {
         includeParentEnvironment: includeParentEnvironment);
   }
 
-  Future<WrappedProcess> start(
-      String executable, Iterable<String> arguments) async {
-    var command = [executable]..addAll(arguments ?? []);
+  Future<WrappedProcess> start(String executable,
+      {Iterable<String> arguments = const []}) async {
+    var command = [executable]..addAll((arguments));
 
     if (sudo || username != null) {
       // sudo -k -p ''
       var sudoArgs = ['sudo', '-k', '-p', ''];
-      if (username != null) sudoArgs.addAll(['-u', username]);
+      if (username != null) sudoArgs.addAll(['-u', username!]);
       if (password != null) sudoArgs.add('-S');
       command.insertAll(0, sudoArgs);
     }
@@ -83,10 +84,11 @@ class Shell {
     return new WrappedProcess(command.first, command.skip(1), p);
   }
 
-  Future<String> startAndReadAsString(
-      String executable, Iterable<String> arguments,
-      {Encoding encoding: utf8, List<int> acceptedExitCodes: const [0]}) async {
-    var p = await start(executable, arguments);
+  Future<String> startAndReadAsString(String executable,
+      {Iterable<String> arguments = const [],
+      Encoding encoding: utf8,
+      List<int> acceptedExitCodes: const [0]}) async {
+    var p = await start(executable, arguments: arguments);
     await p.expectExitCode(acceptedExitCodes);
     return await p.stdout.readAsString(encoding: encoding);
   }

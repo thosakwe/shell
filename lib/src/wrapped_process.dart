@@ -7,7 +7,7 @@ class WrappedProcess {
   final Process process;
   final String executable;
   final Iterable<String> arguments;
-  WrappedProcessOutput _stdout, _stderr;
+  late WrappedProcessOutput _stdout, _stderr;
 
   WrappedProcess(this.executable, this.arguments, this.process) {
     _stdout = new WrappedProcessOutput(process, process.stdout);
@@ -47,8 +47,8 @@ class WrappedProcessOutput extends Stream<List<int>> {
   WrappedProcessOutput(this._process, this._stream);
 
   @override
-  StreamSubscription<List<int>> listen(void Function(List<int> event) onData,
-      {Function onError, void Function() onDone, bool cancelOnError}) {
+  StreamSubscription<List<int>> listen(void Function(List<int> event)? onData,
+      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
     return _stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
